@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renovation Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Renovation Calculator</h1>
+
+        <label for="mode">Select Mode:</label>
+        <select id="mode">
+            <option value="paint">Paint</option>
+            <option value="tiles">Tiles</option>
+            <option value="plasterCeiling">Plaster Ceiling</option>
+            <option value="plasterWall">Plaster Wall</option>
+            <option value="wallpaper">Wallpaper</option>
+        </select>
+
+        <!-- Paint Mode -->
+        <div id="paint" class="mode">
+            <label for="wallLength">Wall Length (ft):</label>
+            <input type="number" id="wallLength" placeholder="Wall Length (ft)">
+            <label for="wallHeight">Wall Height (ft):</label>
+            <input type="number" id="wallHeight" placeholder="Wall Height (ft)">
+            <label for="doorArea">Door/Window Area (ft²):</label>
+            <input type="number" id="doorArea" placeholder="Door Area (ft²)">
+        </div>
+
+        <!-- Tiles Mode -->
+        <div id="tiles" class="mode">
+            <label for="floorLength">Floor Length (ft):</label>
+            <input type="number" id="floorLength" placeholder="Floor Length (ft)">
+            <label for="floorWidth">Floor Width (ft):</label>
+            <input type="number" id="floorWidth" placeholder="Floor Width (ft)">
+            <label for="tileLength">Tile Length (ft):</label>
+            <input type="number" id="tileLength" placeholder="Tile Length (ft)">
+            <label for="tileWidth">Tile Width (ft):</label>
+            <input type="number" id="tileWidth" placeholder="Tile Width (ft)">
+            <label for="tilePrice">Price per Tile (RM):</label>
+            <input type="number" id="tilePrice" placeholder="Price per Tile">
+        </div>
+
+        <!-- Plaster Ceiling Mode -->
+        <div id="plasterCeiling" class="mode">
+            <label for="ceilingLength">Ceiling Length (ft):</label>
+            <input type="number" id="ceilingLength" placeholder="Ceiling Length (ft)">
+            <label for="ceilingWidth">Ceiling Width (ft):</label>
+            <input type="number" id="ceilingWidth" placeholder="Ceiling Width (ft)">
+        </div>
+
+        <!-- Plaster Wall Mode -->
+        <div id="plasterWall" class="mode">
+            <label for="wallLength2">Wall Length (ft):</label>
+            <input type="number" id="wallLength2" placeholder="Wall Length (ft)">
+            <label for="wallHeight2">Wall Height (ft):</label>
+            <input type="number" id="wallHeight2" placeholder="Wall Height (ft)">
+            <label for="doorArea2">Door Area (ft²):</label>
+            <input type="number" id="doorArea2" placeholder="Door Area (ft²)">
+        </div>
+
+        <!-- Wallpaper Mode -->
+        <div id="wallpaper" class="mode">
+            <label for="wallLength3">Wall Length (ft):</label>
+            <input type="number" id="wallLength3" placeholder="Wall Length (ft)">
+            <label for="wallHeight3">Wall Height (ft):</label>
+            <input type="number" id="wallHeight3" placeholder="Wall Height (ft)">
+            <label for="wallpaperWidth">Wallpaper Width (ft):</label>
+            <input type="number" id="wallpaperWidth" placeholder="Wallpaper Width (ft)">
+        </div>
+
+        <div id="output">
+            <h2>Results:</h2>
+            <p id="result"></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
