@@ -3,13 +3,25 @@ document.querySelectorAll('input').forEach(input => input.addEventListener('inpu
 
 function updateMode() {
     const mode = document.getElementById('mode').value;
+
+    // Hide all mode sections
     document.querySelectorAll('.mode').forEach(modeDiv => modeDiv.style.display = 'none');
-    document.getElementById(mode).style.display = 'block';
-    updateResults();  // Update results after mode change
+
+    // Show selected mode section
+    const selectedDiv = document.getElementById(mode);
+    if (selectedDiv) {
+        selectedDiv.style.display = 'block';
+    } else {
+        document.getElementById('result').textContent = 'Invalid mode selected.';
+        return;
+    }
+
+    updateResults();
 }
 
 function updateResults() {
     const mode = document.getElementById('mode').value;
+    const resultDiv = document.getElementById('result');
 
     if (mode === 'paint') {
         const wallLength = parseFloat(document.getElementById('wallLength').value);
@@ -20,9 +32,9 @@ function updateResults() {
             const totalArea = (wallLength * wallHeight) - doorArea;
             const paintLitres = totalArea / 40;
             const undercoatLitres = paintLitres * 0.4;
-            document.getElementById('result').textContent = `You need ${paintLitres.toFixed(2)} litres of paint and ${undercoatLitres.toFixed(2)} litres of undercoat.`;
+            resultDiv.textContent = `You need ${paintLitres.toFixed(2)} litres of paint and ${undercoatLitres.toFixed(2)} litres of undercoat.`;
         } else {
-            document.getElementById('result').textContent = 'Invalid input. Please check your entries.';
+            resultDiv.textContent = 'Invalid input. Please check your entries.';
         }
 
     } else if (mode === 'tiles') {
@@ -37,9 +49,9 @@ function updateResults() {
             const tileArea = tileLength * tileWidth;
             const tilesNeeded = Math.ceil(area / tileArea * 1.1); // 10% wastage
             const totalCost = tilesNeeded * tilePrice;
-            document.getElementById('result').textContent = `${tilesNeeded} tiles needed (incl. 10% wastage). Total cost: RM ${totalCost.toFixed(2)}.`;
+            resultDiv.textContent = `${tilesNeeded} tiles needed (incl. 10% wastage). Total cost: RM ${totalCost.toFixed(2)}.`;
         } else {
-            document.getElementById('result').textContent = 'Invalid input. Please check your entries.';
+            resultDiv.textContent = 'Invalid input. Please check your entries.';
         }
 
     } else if (mode === 'plasterCeiling') {
@@ -48,11 +60,11 @@ function updateResults() {
 
         if (isValid(ceilingLength, ceilingWidth)) {
             const ceilingArea = ceilingLength * ceilingWidth;
-            const boardsNeeded = Math.ceil(ceilingArea / 24); // 6x4 boards
+            const boardsNeeded = Math.ceil(ceilingArea / 24); // 6x4 boards = 24 sqft
             const metalStuds = Math.ceil((ceilingArea / 100) * 20); // 20 studs per 100 sqft
-            document.getElementById('result').textContent = `${boardsNeeded} boards and ${metalStuds} metal studs (12ft each) needed.`;
+            resultDiv.textContent = `${boardsNeeded} boards and ${metalStuds} metal studs (12ft each) needed.`;
         } else {
-            document.getElementById('result').textContent = 'Invalid input. Please check your entries.';
+            resultDiv.textContent = 'Invalid input. Please check your entries.';
         }
 
     } else if (mode === 'plasterWall') {
@@ -62,11 +74,11 @@ function updateResults() {
 
         if (isValid(wallLength2, wallHeight2)) {
             const wallArea = (wallLength2 * wallHeight2) - doorArea2;
-            const boardsNeeded = Math.ceil(wallArea / 32); // Assume 4x8 boards
+            const boardsNeeded = Math.ceil(wallArea / 32); // 4x8 boards = 32 sqft
             const metalStuds = Math.ceil((wallArea / 100) * 15); // 15 studs per 100 sqft
-            document.getElementById('result').textContent = `${boardsNeeded} boards and ${metalStuds} metal studs required.`;
+            resultDiv.textContent = `${boardsNeeded} boards and ${metalStuds} metal studs required.`;
         } else {
-            document.getElementById('result').textContent = 'Invalid input. Please check your entries.';
+            resultDiv.textContent = 'Invalid input. Please check your entries.';
         }
 
     } else if (mode === 'wallpaper') {
@@ -77,10 +89,60 @@ function updateResults() {
         if (isValid(wallLength3, wallHeight3, wallpaperWidth)) {
             const stripsNeeded = Math.ceil(wallLength3 / wallpaperWidth);
             const totalLength = stripsNeeded * wallHeight3;
-            document.getElementById('result').textContent = `${stripsNeeded} strips needed. Total length: ${totalLength.toFixed(2)} ft.`;
+            resultDiv.textContent = `${stripsNeeded} strips needed. Total length: ${totalLength.toFixed(2)} ft.`;
         } else {
-            document.getElementById('result').textContent = 'Invalid input. Please check your entries.';
+            resultDiv.textContent = 'Invalid input. Please check your entries.';
         }
+
+    } else if (mode === 'fluted') {
+        const sqft = parseFloat(document.getElementById('flutedSqft').value) || 0;
+
+        if (sqft <= 0) {
+            resultDiv.textContent = "Please enter a valid wall size.";
+        } else {
+            const totalArea = sqft;
+
+            // Calculate plywood and fluted panels
+            const plywoodCoverage = 4 * 8; // 32 sqft per plywood sheet
+            const flutedCoverage = 4 * 10; // 40 sqft per fluted panel
+            const totalPlywood = Math.ceil(totalArea / plywoodCoverage);
+            const totalFluted = Math.ceil(totalArea / flutedCoverage);
+
+            // Estimate dimensions assuming a square wall
+            const wallSideFt = Math.sqrt(totalArea);
+            const wallWidthCm = wallSideFt * 30.48;
+            const wallHeightCm = wallSideFt * 30.48;
+
+            // Wooden stick calculation
+            const calculateWoodenSticks = (widthCm, heightCm) => {
+                const verticalCount = Math.ceil(widthCm / 50) + 1;
+                const horizontalCount = Math.ceil(heightCm / 50) + 1;
+                const totalVerticalLength = verticalCount * (heightCm / 30.48);
+                const totalHorizontalLength = horizontalCount * (widthCm / 30.48);
+                const totalLength = totalVerticalLength + totalHorizontalLength;
+                return {
+                    sticks: Math.ceil(totalLength / 12),
+                    vertical: verticalCount,
+                    horizontal: horizontalCount
+                };
+            };
+
+            const sticksResult = calculateWoodenSticks(wallWidthCm, wallHeightCm);
+
+            resultDiv.innerHTML = `
+                Total Wall Area: ${totalArea.toFixed(2)} sqft<br>
+                Plywood Needed (4ft x 8ft): ${totalPlywood} sheets<br>
+                - 8ft*4ft Place vertical<br>
+                Fluted Panels Needed (4ft x 10ft): ${totalFluted} panels<br>
+                - 10ft*4ft Place vertical<br>
+                Wooden Stick Grid (50cm×50cm): ${sticksResult.sticks}<br>
+                - Vertical sticks: ${sticksResult.vertical} (full height)<br>
+                - Horizontal sticks: ${sticksResult.horizontal} (full width)<br><br>
+            `;
+        }
+
+    } else {
+        resultDiv.textContent = "Invalid mode selected.";
     }
 }
 
@@ -88,4 +150,5 @@ function isValid(...values) {
     return values.every(value => !isNaN(value) && value > 0);
 }
 
-updateMode();  // Initialize the first mode
+// Initialize
+updateMode();
